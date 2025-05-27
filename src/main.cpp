@@ -1,18 +1,26 @@
 #include <Arduino.h>
+#include "MPU6050_Handler.h"
+#include "RobotActions.h"
+#include "BLE_Handler.h"
 
-// put function declarations here:
-int myFunction(int, int);
+MPU6050_Handler mpuHandler;
+RobotActions robot(&mpuHandler);
+BLE_Handler bleHandler(&robot);
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+    Serial.begin(115200);
+    mpuHandler.begin();
+    robot.begin();
+    bleHandler.begin();
+    Serial.println("RoboDog is ready!");
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-}
-
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+    if (robot.getIsMoving()) {
+        robot.walk();
+    } else {
+        robot.stand();
+    }
+    robot.updateBalance();
+    delay(100);
 }
