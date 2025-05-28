@@ -8,11 +8,22 @@ RobotActions robot(&mpuHandler);
 BLE_Handler bleHandler(&robot);
 
 void setup() {
-    Serial.begin(115200);
-    mpuHandler.begin();
-    robot.begin();
-    bleHandler.begin();
-    Serial.println("RoboDog is ready!");
+  Serial.begin(115200);
+  Serial.println("Serial bắt đầu!");
+
+  Serial.println("MPU init...");
+  // mpuHandler.begin();
+  Serial.println("MPU OK");
+
+  Serial.println("Robot init...");
+  robot.begin();
+  Serial.println("Robot OK");
+
+  Serial.println("BLE init...");
+  bleHandler.begin();
+  Serial.println("BLE OK");
+
+  Serial.println("RoboDog is ready!");
 }
 
 void loop() {
