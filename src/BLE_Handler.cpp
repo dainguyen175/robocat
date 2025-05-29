@@ -29,7 +29,7 @@ public:
                 Serial.println("Received START command");
             }
         } else if (value == "STOP") {
-            robot->setIsMoving(false);
+            robot->stop();
             Serial.println("Received STOP command");
         } else if (value == "SIT") {
             robot->sit();

@@ -28,8 +28,52 @@ void RobotActions::stand() {
 }
 
 void RobotActions::walk() {
-    if (!isSitting) {
-        moveToPosition(WALKING_POSITIONS);
+    if (!isSitting && isMoving) {
+        // Tăng tốc độ di chuyển bằng cách giảm delay
+        static int step = 0;
+        const int WALK_STEPS = 4;  // Số bước trong một chu kỳ đi bộ
+        
+        switch(step) {
+            case 0:
+                // Bước 1: Nâng chân trước bên trái và sau bên phải
+                servos[0].write(WALKING_POSITIONS[0] + 30);  // Tăng góc lên
+                servos[5].write(WALKING_POSITIONS[5] + 30);
+                servos[1].write(WALKING_POSITIONS[1]);
+                servos[2].write(WALKING_POSITIONS[2]);
+                servos[3].write(WALKING_POSITIONS[3]);
+                servos[4].write(WALKING_POSITIONS[4]);
+                break;
+            case 1:
+                // Bước 2: Đẩy chân trước bên trái và sau bên phải về sau
+                servos[0].write(WALKING_POSITIONS[0] - 30);  // Tăng góc xuống
+                servos[5].write(WALKING_POSITIONS[5] - 30);
+                servos[1].write(WALKING_POSITIONS[1]);
+                servos[2].write(WALKING_POSITIONS[2]);
+                servos[3].write(WALKING_POSITIONS[3]);
+                servos[4].write(WALKING_POSITIONS[4]);
+                break;
+            case 2:
+                // Bước 3: Nâng chân trước bên phải và sau bên trái
+                servos[3].write(WALKING_POSITIONS[3] + 30);
+                servos[2].write(WALKING_POSITIONS[2] + 30);
+                servos[0].write(WALKING_POSITIONS[0]);
+                servos[1].write(WALKING_POSITIONS[1]);
+                servos[4].write(WALKING_POSITIONS[4]);
+                servos[5].write(WALKING_POSITIONS[5]);
+                break;
+            case 3:
+                // Bước 4: Đẩy chân trước bên phải và sau bên trái về sau
+                servos[3].write(WALKING_POSITIONS[3] - 30);
+                servos[2].write(WALKING_POSITIONS[2] - 30);
+                servos[0].write(WALKING_POSITIONS[0]);
+                servos[1].write(WALKING_POSITIONS[1]);
+                servos[4].write(WALKING_POSITIONS[4]);
+                servos[5].write(WALKING_POSITIONS[5]);
+                break;
+        }
+        
+        step = (step + 1) % WALK_STEPS;
+        delay(100);  // Giảm delay để tăng tốc độ
     }
 }
 

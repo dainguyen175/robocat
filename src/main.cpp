@@ -12,7 +12,7 @@ void setup() {
   Serial.println("Serial bắt đầu!");
 
   Serial.println("MPU init...");
-  // mpuHandler.begin();
+  mpuHandler.begin();
   Serial.println("MPU OK");
 
   Serial.println("Robot init...");
