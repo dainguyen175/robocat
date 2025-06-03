@@ -108,29 +108,47 @@ void RobotActions::stop() {
 }
 
 void RobotActions::updateBalance() {
-    if (!isSitting) {  // Chỉ giữ thăng bằng khi không ngồi
+    if (!isSitting && isMoving) {  // Chỉ giữ thăng bằng khi không ngồi và đang di chuyển
         mpuHandler->read();
-        float pitchAdjustment = mpuHandler->getPitchAdjustment();
-        float rollAdjustment = mpuHandler->getRollAdjustment();
+        float pitch = mpuHandler->getPitch();
+        float roll = mpuHandler->getRoll();
+        
+        // Log MPU values
+        Serial.print("MPU - Pitch: ");
+        Serial.print(pitch);
+        Serial.print(" Roll: ");
+        Serial.println(roll);
+        
+        // Tính toán điều chỉnh dựa trên góc nghiêng
+        float pitchAdjustment = -pitch * 0.5;  // Hệ số 0.5 để giảm độ nhạy
+        float rollAdjustment = -roll * 0.5;
         
         for(int i = 0; i < 6; i++) {
             int currentPos = servos[i].read();
             int newPos = currentPos;
             
-            if(i < 3) {
+            if(i < 3) {  // Các servo phía trước
                 newPos += pitchAdjustment;
-            } else {
+            } else {     // Các servo phía sau
                 newPos -= pitchAdjustment;
             }
             
-            if(i % 2 == 0) {
+            if(i % 2 == 0) {  // Các servo bên trái
                 newPos += rollAdjustment;
-            } else {
+            } else {          // Các servo bên phải
                 newPos -= rollAdjustment;
             }
             
             newPos = constrain(newPos, 0, 180);
             servos[i].write(newPos);
+            
+            // Log servo adjustments
+            Serial.print("Servo ");
+            Serial.print(i);
+            Serial.print(" - Current: ");
+            Serial.print(currentPos);
+            Serial.print(" New: ");
+            Serial.println(newPos);
         }
     }
 } 

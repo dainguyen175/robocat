@@ -13,6 +13,9 @@ class MyServerCallbacks: public BLEServerCallbacks {
     void onDisconnect(BLEServer* pServer) {
         deviceConnected = false;
         Serial.println("Device disconnected");
+        // Restart advertising
+        BLEDevice::startAdvertising();
+        Serial.println("Restart advertising");
     }
 };
 
